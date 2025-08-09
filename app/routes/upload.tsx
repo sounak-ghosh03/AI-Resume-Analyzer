@@ -1,8 +1,15 @@
 import React, { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router";
 import FileUploader from "~/components/FileUploader";
 import Navbar from "~/components/Navbar";
+import { usePuterStore } from "~/lib/puter";
+import { convertPdfToImage } from "~/lib/pdf2image";
+import { generateUUID } from "~/lib/utils";
+import { prepareInstructions } from "../../constants/index";
 
 const upload = () => {
+    const { auth, isLoading, fs, ai, kv } = usePuterStore();
+    const navigate = useNavigate();
     const [isProcessing, setIsProcessing] = useState(true);
     const [statusText, setStatusText] = useState("");
     const [file, setFile] = useState<File | null>(null);
@@ -10,7 +17,94 @@ const upload = () => {
     const handleFileSelect = (file: File | null) => {
         setFile(file);
     };
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {};
+
+    const handleAnalyze = async ({
+        companyName,
+        jobTitle,
+        jobDescription,
+        file,
+    }: {
+        companyName: string;
+        jobTitle: string;
+        jobDescription: string;
+        file: File;
+    }) => {
+        setIsProcessing(true);
+        setStatusText("Uploading the file...Processing...");
+        const uploadedFile = await fs.upload([file]);
+        if (!uploadedFile) {
+            alert("Error uploading file");
+            setStatusText("Error: Failed to upload file");
+            return;
+        }
+        setStatusText("Converting to image... ");
+        const imageFile = await convertPdfToImage(file);
+        if (!imageFile) {
+            alert("Error converting file to image");
+            setStatusText("Error: Failed to convert file to image");
+            return;
+        }
+        setStatusText("Uploading image...");
+        const uploadedImage = await fs.upload([imageFile.file ?? new Blob()]);
+        if (!uploadedImage) {
+            alert("Error uploading image");
+            setStatusText("Error: Failed to upload image");
+            return;
+        }
+
+        setStatusText("Preparing data for processing...");
+        const uuid = generateUUID();
+        const data = {
+            id: uuid,
+            companyName,
+            jobTitle,
+            jobDescription,
+            resumePath: uploadedFile.path,
+            imagePath: uploadedImage.path,
+            feedback: "",
+        };
+
+        await kv.set(`resume:${uuid}`, JSON.stringify(data));
+        setStatusText("Analyzing ...");
+        const feedback = await ai.feedback(
+            uploadedFile.path,
+            prepareInstructions({
+                jobTitle,
+                jobDescription,
+            })
+        );
+        if (!feedback) {
+            alert("Error analyzing resume");
+            setStatusText("Error: Failed to analyze resume");
+            return;
+        }
+        const feedbackText =
+            typeof feedback.message.content === "string"
+                ? feedback.message.content
+                : feedback.message.content[0].text;
+        data.feedback = JSON.parse(feedbackText);
+        await kv.set(`resume:${uuid}`, JSON.stringify(data));
+        setStatusText("Analysis complete!");
+    };
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const form = e.currentTarget.closest("form");
+        if (!form) {
+            return;
+        }
+        const formData = new FormData(form);
+
+        const companyName = formData.get("company-name") as string;
+        const jobTitle = formData.get("job-title") as string;
+        const jobDescription = formData.get("job-description") as string;
+
+        if (!file) {
+            alert("Please select a file");
+            return;
+        }
+        handleAnalyze({ companyName, jobTitle, jobDescription, file });
+    };
     return (
         <main className="bg-[url('/images/bg-main.svg')] bg-cover">
             <Navbar />
@@ -85,4 +179,4 @@ const upload = () => {
         </main>
     );
 };
-export default Upload;
+export default upload;
