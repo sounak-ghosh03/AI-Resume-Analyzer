@@ -37,7 +37,7 @@ export default function Home() {
             setLoadingResumes(false);
         };
         loadResumes();
-    });
+    },[]);
 
     return (
         <main className="bg-[url('/images/bg-main.svg')] bg-cover">
@@ -66,7 +66,7 @@ export default function Home() {
                 )}
 
                 {!loadingResumes && resumes.length > 0 && (
-                    <div className="resume-section">
+                    <div className="resumes-section">
                         {resumes.map((resume) => (
                             <ResumeCard key={resume.id} resume={resume} />
                         ))}
