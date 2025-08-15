@@ -15,8 +15,10 @@
         "rootDirs": [".", "./.react-router/types"],
         "baseUrl": ".",
         "paths": {
-            "~/*": ["./app/*"]
+            "~/*": ["./app/*"],
+            "pdfjs-dist": ["node_modules/pdfjs-dist"]
         },
+
         "esModuleInterop": true,
         "verbatimModuleSyntax": true,
         "noEmit": true,

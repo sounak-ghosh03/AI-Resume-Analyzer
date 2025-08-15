@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 import FileUploader from "~/components/FileUploader";
 import Navbar from "~/components/Navbar";
 import { usePuterStore } from "~/lib/puter";
-import { convertPdfToImage } from "~/lib/pdf2image";
 import { generateUUID } from "~/lib/utils";
 import { prepareInstructions } from "../../constants/index";
 
@@ -38,6 +37,7 @@ const upload = () => {
             return;
         }
         setStatusText("Converting to image... ");
+        const { convertPdfToImage } = await import("~/lib/pdf2image");
         const imageFile = await convertPdfToImage(file);
         if (!imageFile) {
             alert("Error converting file to image");
