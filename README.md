@@ -1,87 +1,34 @@
-# Welcome to React Router!
+# RESUMIND -Ai Resume Analyser
 
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
-
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
-```
-
-### Development
-
-Start the development server with HMR:
-
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+A blazing-fast, AI-powered resume analysis tool built with **Vite**, **React Router**, **Puter**, and **GPT-4**. Upload your resume and instantly receive a detailed review along with an **ATS (Applicant Tracking System) score** to help you optimize your chances of landing that dream job.
 
 ---
 
-Built with ❤️ using React Router.
+## 🚀 Features
+
+- ⚡ **Fast & Modern Stack**: Built with Vite for lightning-fast development and React Router for seamless navigation.
+- 🧠 **AI-Powered Insights**: Uses GPT-4 to generate human-like resume reviews tailored to your industry and role.
+- 📊 **ATS Score Calculation**: Evaluates your resume against common ATS criteria to give you a score and actionable feedback.
+- 📁 **File Upload Support**: Easily upload your resume in PDF or DOCX format.
+- 🌐 **Cloud-Ready**: Powered by Puter for scalable backend and file handling.
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology       | Purpose                                  |
+|------------------|-------------------------------------------|
+| Vite             | Fast bundling and dev server              |
+| React Router     | Client-side routing                       |
+| Puter            | File upload and backend integration       |
+| GPT-4            | Resume review and ATS scoring logic       |
+
+---
+
+## 📦 Installation
+
+```bash
+git clone https://github.com/your-username/resume-reviewer-ai.git
+cd resume-reviewer-ai
+npm install
+npm run dev
